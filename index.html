@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0B0B14">
+  <title>The Ceremony · Decisio 2025</title>
+  <meta name="description" content="Decisio Year in Review, Direction D: a six-chapter, black-tie awards night for a year of taste.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@600;800;900&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23E8B23A'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%230B0B14'/%3E%3C/svg%3E">
+  <link rel="preload" as="image" href="assets/dune.webp">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="room">
+    <aside class="playbill" aria-label="About this prototype">
+      <div class="pb-mark"><span></span></div>
+      <p class="pb-kicker">Direction D · Year in Review</p>
+      <h1 class="pb-title">The Ceremony</h1>
+      <p class="pb-sub">Gala. Golden. Once a year.</p>
+      <ol class="pb-chapters" id="chapterList">
+        <li><button data-go="0"><em>00</em>Cover</button></li>
+        <li><button data-go="1"><em>01</em>The Numbers</button></li>
+        <li><button data-go="2"><em>02</em>Your #1</button></li>
+        <li><button data-go="3"><em>03</em>Your Worlds</button></li>
+        <li><button data-go="4"><em>04</em>Your Persona</button></li>
+        <li><button data-go="5"><em>05</em>Wrapped</button></li>
+      </ol>
+      <p class="pb-keys"><kbd>→</kbd> <kbd>Space</kbd> next &nbsp; <kbd>←</kbd> back &nbsp; <kbd>R</kbd> replay</p>
+    </aside>
+
+    <div class="device" id="device">
+      <div class="stage" id="stage">
+        <div class="bg" aria-hidden="true"></div>
+        <div class="beam" aria-hidden="true"></div>
+        <div class="spot" aria-hidden="true"></div>
+        <canvas class="fx" id="fx" aria-hidden="true"></canvas>
+
+        <div class="statusbar" aria-hidden="true">
+          <span class="sb-time">9:41</span>
+          <span class="sb-icons">
+            <svg width="17" height="11" viewBox="0 0 17 11"><rect x="0" y="3" width="3" height="8" rx="1" fill="#fff"/><rect x="4.5" y="1.5" width="3" height="9.5" rx="1" fill="#fff"/><rect x="9" y="0" width="3" height="11" rx="1" fill="#fff"/><rect x="13.5" y="0" width="3" height="11" rx="1" fill="#fff" opacity=".4"/></svg>
+            <svg width="24" height="11" viewBox="0 0 24 11"><rect x=".5" y=".5" width="20" height="10" rx="3" fill="none" stroke="#fff" opacity=".5"/><rect x="2" y="2" width="16" height="7" rx="1.5" fill="#fff"/><rect x="22" y="4" width="1.5" height="3" rx=".75" fill="#fff" opacity=".6"/></svg>
+          </span>
+        </div>
+
+        <div class="progress" id="progress" aria-hidden="true">
+          <i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i>
+        </div>
+
+        <header class="topbar">
+          <div class="brand"><span class="mark"><span></span></span><span class="brand-text">DECISIO · 2025</span></div>
+          <button class="close" data-action="restart" aria-label="Close and restart">×</button>
+        </header>
+
+        <main class="screens" id="screens">
+
+          <!-- 00 · COVER -->
+          <section class="screen s-cover" data-name="Cover">
+            <div class="content center">
+              <div class="eyebrow eyebrow-wide" data-el="presents">DECISIO PRESENTS</div>
+              <div class="year foil" data-el="year">2025</div>
+              <h2 class="cover-title" data-el="title">Your Year in Review</h2>
+              <p class="lede cover-lede" data-el="lede">A year of everything you watched, played, read and rated — one last time, together.</p>
+            </div>
+            <div class="footer">
+              <button class="btn-gold" data-action="next" data-el="cta"><span>Begin the show</span><span class="arr">→</span></button>
+              <div class="hint" data-el="hint">6 chapters · swipe to move</div>
+            </div>
+          </section>
+
+          <!-- 01 · THE NUMBERS -->
+          <section class="screen s-numbers" data-name="The Numbers">
+            <div class="content left">
+              <div class="eyebrow" data-el="eyebrow">CHAPTER 1 · THE NUMBERS</div>
+              <div class="big-num" data-el="big" data-value="412" aria-label="412"></div>
+              <h2 class="h-lg" data-el="headline">things reviewed<br>in 2025</h2>
+              <p class="lede" data-el="lede">That's more than 96% of Decisio. A lot of opinions, and you had them all.</p>
+              <div class="stats" data-el="stats">
+                <div class="stat"><b data-count="1240">1,240</b><small>HOURS</small></div>
+                <div class="stat"><b data-count="6">6</b><small>WORLDS</small></div>
+                <div class="stat gold"><b data-count="96" data-suffix="th">96th</b><small>PERCENTILE</small></div>
+              </div>
+            </div>
+            <div class="footer nudge"><svg width="20" height="20" viewBox="0 0 20 20"><path d="M7 14l3 3 3-3M10 17V4" fill="none" stroke="#E8B23A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="hint">Swipe for Chapter 2</div></div>
+          </section>
+
+          <!-- 02 · YOUR #1 -->
+          <section class="screen s-top" data-name="Your #1">
+            <div class="content center">
+              <div class="eyebrow" data-el="eyebrow" style="margin-bottom:20px">CHAPTER 2 · YOUR #1</div>
+              <div class="poster-wrap" data-el="posterWrap">
+                <div class="poster-glow" data-el="glow"></div>
+                <div class="poster" data-el="poster">
+                  <div class="poster-face poster-back">
+                    <div class="pb-inner">
+                      <span class="mark mark-lg"><span></span></span>
+                      <span class="pb-no">No.&thinsp;1</span>
+                      <span class="pb-line"></span>
+                      <span class="pb-cap">OF 412 · 2025</span>
+                    </div>
+                  </div>
+                  <div class="poster-face poster-front">
+                    <div class="poster-img"><img src="assets/dune.webp" alt="Dune: Part Two poster" draggable="false"></div>
+                    <div class="glare" data-el="glare"></div>
+                  </div>
+                </div>
+              </div>
+              <h2 class="title-md" data-el="title">Dune: Part Two</h2>
+              <p class="sub" data-el="sub">Your #1 of 412 · Film</p>
+              <div class="score" data-el="score"><span class="ten foil" data-el="ten">10</span><span class="of" data-el="of">/10</span></div>
+              <p class="note-gold" data-el="note">Your only perfect score all year</p>
+            </div>
+            <div class="footer nudge"><svg width="20" height="20" viewBox="0 0 20 20"><path d="M7 14l3 3 3-3M10 17V4" fill="none" stroke="#E8B23A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="hint">Swipe for Chapter 3</div></div>
+          </section>
+
+          <!-- 03 · YOUR WORLDS -->
+          <section class="screen s-worlds" data-name="Your Worlds">
+            <div class="content left">
+              <div class="eyebrow" data-el="eyebrow">CHAPTER 3 · YOUR WORLDS</div>
+              <h2 class="h-xl" data-el="headline">Film was<br>home.</h2>
+              <p class="lede lede-sm" data-el="lede">You spent 2025 across six worlds — but one had your heart.</p>
+              <div class="bars" data-el="bars">
+                <div class="bar-row winner"><span class="bl">Film</span><span class="bt"><span class="bf" style="--c:#F07830" data-w="100"></span></span><span class="bn" data-count="188">188</span></div>
+                <div class="bar-row"><span class="bl">TV</span><span class="bt"><span class="bf" style="--c:#3B6FC4" data-w="51"></span></span><span class="bn" data-count="96">96</span></div>
+                <div class="bar-row"><span class="bl">Games</span><span class="bt"><span class="bf" style="--c:#34A96A" data-w="29"></span></span><span class="bn" data-count="54">54</span></div>
+                <div class="bar-row"><span class="bl">Books</span><span class="bt"><span class="bf" style="--c:#C0772E" data-w="22"></span></span><span class="bn" data-count="42">42</span></div>
+                <div class="bar-row"><span class="bl">Podcasts</span><span class="bt"><span class="bf" style="--c:#8A6BB0" data-w="11"></span></span><span class="bn" data-count="20">20</span></div>
+                <div class="bar-row"><span class="bl">Boardgames</span><span class="bt"><span class="bf" style="--c:#23A5A5" data-w="7"></span></span><span class="bn" data-count="12">12</span></div>
+              </div>
+            </div>
+            <div class="footer nudge"><svg width="20" height="20" viewBox="0 0 20 20"><path d="M7 14l3 3 3-3M10 17V4" fill="none" stroke="#E8B23A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="hint">Swipe for Chapter 4</div></div>
+          </section>
+
+          <!-- 04 · YOUR PERSONA -->
+          <section class="screen s-persona" data-name="Your Persona">
+            <div class="content center">
+              <div class="eyebrow" data-el="eyebrow" style="margin-bottom:22px">CHAPTER 4 · YOUR PERSONA</div>
+              <div class="orbit-wrap">
+                <div class="rays" data-el="rays"></div>
+                <svg class="orbit" data-el="orbit" width="120" height="120" viewBox="0 0 120 120">
+                  <circle class="ring" cx="60" cy="60" r="52" fill="none" stroke="#E8B23A" stroke-width="1.5" opacity=".4"/>
+                  <circle class="ring" cx="60" cy="60" r="38" fill="none" stroke="#E8B23A" stroke-width="1.5" opacity=".55"/>
+                  <circle class="ring" cx="60" cy="60" r="22" fill="none" stroke="#E8B23A" stroke-width="1.5" opacity=".75"/>
+                  <g class="moons">
+                    <circle cx="60" cy="8" r="4" fill="#E8B23A"/>
+                    <circle cx="60" cy="112" r="4" fill="#E8B23A" opacity=".6"/>
+                    <circle cx="8" cy="60" r="4" fill="#E8B23A" opacity=".6"/>
+                    <circle cx="112" cy="60" r="4" fill="#E8B23A" opacity=".6"/>
+                  </g>
+                  <circle class="core" cx="60" cy="60" r="9" fill="#E8B23A"/>
+                </svg>
+              </div>
+              <p class="were" data-el="were">This year, you were</p>
+              <h2 class="persona foil" data-el="persona">The Midnight<br>Cinephile</h2>
+              <p class="persona-body" data-el="body">Slow-burn dramas, surreal sci-fi, and a healthy 2am problem. Your taste was more niche than 82% of members.</p>
+            </div>
+            <div class="footer nudge"><svg width="20" height="20" viewBox="0 0 20 20"><path d="M7 14l3 3 3-3M10 17V4" fill="none" stroke="#E8B23A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="hint">Swipe for the finale</div></div>
+          </section>
+
+          <!-- 05 · WRAPPED -->
+          <section class="screen s-finale" data-name="Wrapped">
+            <div class="content top">
+              <div class="eyebrow" data-el="eyebrow">CHAPTER 5 · WRAPPED</div>
+              <div class="card-wrap" data-el="cardWrap">
+                <article class="card" data-el="card">
+                  <div class="card-holo" data-el="holo"></div>
+                  <div class="card-row" data-el="c1">
+                    <div class="card-brand"><span class="mark mark-sm"><span></span></span><span>decisio</span></div>
+                    <span class="foil card-year">2025</span>
+                  </div>
+                  <div data-el="c2">
+                    <div class="card-label">YOU WERE</div>
+                    <div class="foil card-persona">The Midnight Cinephile</div>
+                  </div>
+                  <div class="card-grid" data-el="c3">
+                    <div><b data-count="412">412</b><small>REVIEWED</small></div>
+                    <div><b data-count="1240" data-suffix="h">1,240h</b><small>WATCHED</small></div>
+                    <div><b>Dune</b><small>#1 · 10/10</small></div>
+                    <div class="gold"><b data-count="96" data-suffix="th">96th</b><small>PERCENTILE</small></div>
+                  </div>
+                  <div class="card-foot" data-el="c4">
+                    <span>@alex_atienza</span><span class="turn">your turn →</span>
+                  </div>
+                </article>
+              </div>
+              <div class="shares" data-el="shares">
+                <button class="share" data-action="share-stories"><span class="sq"><svg width="20" height="20" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="6" fill="none" stroke="#E8B23A" stroke-width="2"/><circle cx="12" cy="12" r="5" fill="none" stroke="#E8B23A" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.5" fill="#E8B23A"/></svg></span>Stories</button>
+                <button class="share" data-action="share-tiktok"><span class="sq"><svg width="20" height="20" viewBox="0 0 24 24"><path d="M12 3v11.5a3.5 3.5 0 1 1-3-3.46" fill="none" stroke="#E8B23A" stroke-width="2" stroke-linecap="round"/><path d="M12 3c1 2.2 2.8 3.7 5 4" fill="none" stroke="#E8B23A" stroke-width="2" stroke-linecap="round"/></svg></span>TikTok</button>
+                <button class="share" data-action="share-messages"><span class="sq"><svg width="20" height="20" viewBox="0 0 24 24"><path d="M4 5h16v12H8l-4 3z" fill="none" stroke="#E8B23A" stroke-width="2" stroke-linejoin="round"/></svg></span>Messages</button>
+                <button class="share" data-action="copy"><span class="sq"><svg width="20" height="20" viewBox="0 0 24 24"><path d="M9 15l6-6M8 8h-.5A3.5 3.5 0 0 0 4 11.5A3.5 3.5 0 0 0 7.5 15H9M15 9h1.5A3.5 3.5 0 0 1 20 12.5A3.5 3.5 0 0 1 16.5 16H15" fill="none" stroke="#E8B23A" stroke-width="2" stroke-linecap="round"/></svg></span>Copy</button>
+              </div>
+            </div>
+            <div class="footer footer-finale">
+              <button class="btn-gold btn-wide" data-action="share" data-el="cta"><span>Share your 2025</span><span class="arr">→</span></button>
+              <div class="hint" data-el="hint"><button class="link" data-action="wallpaper">Save as wallpaper</button> · <button class="link" data-action="restart">replay the show</button></div>
+            </div>
+          </section>
+        </main>
+
+        <div class="flash" id="flash" aria-hidden="true"></div>
+        <div class="grain" aria-hidden="true"></div>
+        <div class="toast" id="toast" role="status" aria-live="polite"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="vendor/gsap.min.js"></script>
+  <script src="vendor/CustomEase.min.js"></script>
+  <script src="vendor/SplitText.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
