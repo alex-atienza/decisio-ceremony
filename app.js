@@ -289,7 +289,6 @@
         .from(S.year.chars, { yPercent: 115, opacity: 0, rotateX: -75, filter: 'blur(14px)', transformPerspective: 600,
           transformOrigin: '50% 100%', duration: 1.5, stagger: 0.1 }, 0.5)
         .add(shine(year, 1.4), 1.45)
-        .add(() => { const p = pt(year); fx.burst(p.x, p.y, { count: 36, speed: [2, 7], colors: ['#F7D88A', '#E8B23A', '#FFF1C4'] }); }, 1.35)
         .from(S.coverTitle.words, { y: 26, opacity: 0, filter: 'blur(6px)', duration: 1.1, stagger: 0.07 }, 1.2)
         .from(el(s, 'lede'), { y: 16, opacity: 0, duration: 1.1 }, 1.5)
         .from(cta, { y: 36, scale: 0.86, opacity: 0, duration: 1.4, ease: 'elastic.out(1,0.7)' }, 1.75)
@@ -321,7 +320,6 @@
         .to(reels, { opacity: 0, duration: 0.35, ease: 'power1.out' }, landAt)
         .fromTo(big, { scale: 1 }, { scale: 1.045, transformOrigin: '0% 80%', duration: 0.16, ease: 'power2.out', yoyo: true, repeat: 1 }, landAt)
         .add(shine(final, 1.1), landAt + 0.05)
-        .add(() => { const p = pt(final, 0.55, 0.45); fx.burst(p.x, p.y, { count: 60, speed: [3, 10], colors: ['#F7D88A', '#E8B23A', '#FFF1C4', '#C9962E'] }); }, landAt)
         .from(S.numHead.lines, { yPercent: 105, duration: 1.1, stagger: 0.12 }, 0.75)
         .from(el(s, 'lede'), { y: 14, opacity: 0, duration: 1 }, 1.05)
         .from($$('.stat', s), { y: 34, opacity: 0, scale: 0.94, duration: 1.2, stagger: 0.09 }, 1.25);
@@ -347,14 +345,12 @@
         .to(poster, { scale: 1.1, duration: 0.5, ease: 'power2.out', yoyo: true, repeat: 1 }, 1.85)
         .add(flashAt(0.55, 0.05), 2.12)
         .to(glow, { opacity: 1, scale: 1, duration: 1.4 }, 2.15)
-        .add(() => { const p = pt(poster); fx.burst(p.x, p.y, { count: 110, speed: [4, 14] }); }, 2.2)
         .fromTo(glare, { opacity: 0, '--gx': '-10%', '--gy': '0%' }, { opacity: 0.9, '--gx': '110%', '--gy': '100%', duration: 1.1, ease: 'power2.inOut' }, 2.25)
         .to(glare, { opacity: 0, duration: 0.5 }, 3.2)
         .from(S.duneTitle.chars, { yPercent: 60, opacity: 0, filter: 'blur(6px)', duration: 0.9, stagger: 0.022 }, 2.55)
         .from(el(s, 'sub'), { opacity: 0, y: 8, duration: 0.8 }, 2.85)
         .fromTo(ten, { scale: 3.2, opacity: 0, filter: 'blur(10px)' }, { scale: 1, opacity: 1, filter: 'blur(0px)', duration: 0.42, ease: 'stamp' }, 3.1)
         .add(shake(content, 5), 3.52)
-        .add(() => { const p = pt(ten); fx.burst(p.x, p.y, { count: 50, speed: [3, 9], colors: ['#F7D88A', '#E8B23A', '#FFF1C4'] }); }, 3.52)
         .add(shine(ten, 1), 3.6)
         .from(el(s, 'of'), { x: -12, opacity: 0, duration: 0.8 }, 3.58)
         .from(el(s, 'note'), { opacity: 0, y: 6, duration: 0.8 }, 3.75)
@@ -384,8 +380,6 @@
       const win = rows[0];
       tl.add(() => {
         win.classList.remove('glint'); void win.offsetWidth; win.classList.add('glint');
-        const p = pt($('.bf', win), 1, 0.5);
-        fx.burst(p.x, p.y, { count: 26, speed: [2, 6], colors: ['#F07830', '#F7D88A', '#E8B23A'] });
       }, 2.3)
         .fromTo($('.bl', win), { color: '#FFFFFF' }, { color: '#F07830', duration: 0.3, yoyo: true, repeat: 1, ease: 'power1.inOut' }, 2.3)
         .fromTo(win, { scale: 1 }, { scale: 1.03, transformOrigin: '0% 50%', duration: 0.25, yoyo: true, repeat: 1, ease: 'power2.out' }, 2.3)
@@ -412,8 +406,8 @@
         .add(flashAt(0.4, 0.05), 2.4)
         .from(S.persona.chars, { opacity: 0, yPercent: 70, rotateX: -85, filter: 'blur(10px)', transformPerspective: 500,
           transformOrigin: '50% 100%', duration: 1.2, stagger: 0.04 }, 2.4)
-        .add(() => { fx.cannons(); }, 2.6)
-        .add(() => { fx.rain(70); }, 3.1)
+        // confetti is reserved for two moments: this reveal and the finale
+        .add(() => { fx.cannons({ count: 45 }); }, 2.6)
         .add(shine(persona, 1.5), 3.25)
         .from(S.personaBody.words, { opacity: 0, y: 10, filter: 'blur(4px)', duration: 0.9, stagger: 0.022 }, 3.3)
         .from($('.footer', s), { opacity: 0, y: 10, duration: 0.8 }, 4.1)
@@ -438,7 +432,7 @@
         .from(['c1', 'c2', 'c3', 'c4'].map((n) => el(s, n)), { y: 14, opacity: 0, duration: 1, stagger: 0.1 }, 0.65)
         .fromTo(holo, { opacity: 0, '--hx': '-60%' }, { opacity: 1, '--hx': '60%', duration: 1.4, ease: 'power2.inOut' }, 1.1)
         .to(holo, { opacity: 0, duration: 0.6 }, 2.3)
-        .add(() => { const p = pt(card, 0.5, 0.3); fx.burst(p.x, p.y, { count: 70, speed: [3, 11] }); fx.rain(80); }, 0.95)
+        .add(() => { fx.rain(45); }, 0.95)
         .from($$('.share', s), { y: 18, scale: 0.6, opacity: 0, duration: 0.9, stagger: 0.07, ease: 'back.out(2.2)' }, 1.35)
         .from(cta, { y: 40, opacity: 0, duration: 1.1 }, 1.55)
         .from(el(s, 'hint'), { opacity: 0, duration: 0.8 }, 1.85);
@@ -593,7 +587,6 @@
   function pop(btn) {
     const sq = $('.sq', btn) || btn;
     gsap.fromTo(sq, { scale: 0.88 }, { scale: 1, duration: 0.6, ease: 'elastic.out(1.2,0.4)' });
-    const p = pt(sq); fx.burst(p.x, p.y, { count: 18, speed: [2, 6], colors: ['#F7D88A', '#E8B23A', '#FFF1C4'] });
   }
 
   document.addEventListener('click', async (e) => {
