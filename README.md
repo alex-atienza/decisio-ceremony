@@ -29,6 +29,10 @@ It's a static web prototype built from the Paper artboards `D1–D6` (file "Week
 python3 -m http.server 4173
 ```
 
+## Deploying
+
+Pushing to `main` redeploys GitHub Pages. Run `./scripts/stamp.sh` first whenever `styles.css` or `app.js` changes. It stamps their links in `index.html` with a content hash, so browsers never mix new HTML with a cached old stylesheet (Pages caches files for 10 minutes).
+
 ## Stack
 
 It's plain HTML, CSS, and JS, with no build step. The motion runs on [GSAP](https://gsap.com) 3.13 (core, SplitText, CustomEase), vendored in `vendor/`. Confetti and gold dust are drawn on a small canvas particle system in `app.js`.
