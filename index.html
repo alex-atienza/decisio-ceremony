@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@600;800;900&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23E8B23A'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%230B0B14'/%3E%3C/svg%3E">
   <link rel="preload" as="image" href="assets/dune.webp">
-  <link rel="stylesheet" href="styles.css?v=bdc5dced">
+  <link rel="stylesheet" href="styles.css?v=b198dfa3">
 </head>
 <body>
   <div class="room">
@@ -21,6 +21,7 @@
       <h1 class="pb-title">The Ceremony</h1>
       <p class="pb-sub">Gala. Golden. Once a year.</p>
       <ol class="pb-chapters" id="chapterList">
+        <li><button data-action="restart" data-prelude><em>✦</em>The Invitation</button></li>
         <li><button data-go="0"><em>00</em>Cover</button></li>
         <li><button data-go="1"><em>01</em>The Numbers</button></li>
         <li><button data-go="2"><em>02</em>Your #1</button></li>
@@ -245,8 +246,12 @@
               <span class="seal-ring" data-el="sealRing"></span>
               <span class="seal-pulse" data-el="sealPulse"></span>
               <button class="seal" data-action="open" data-el="seal" aria-label="Break the seal and open your invitation">
-                <span class="seal-half seal-l"><svg viewBox="0 0 72 72"><use href="#sealArt"/></svg></span>
-                <span class="seal-half seal-r"><svg viewBox="0 0 72 72"><use href="#sealArt"/></svg></span>
+                <span class="seal-whole"><svg viewBox="0 0 72 72"><use href="#sealArt"/></svg></span>
+                <span class="seal-shard shard-a"><svg viewBox="0 0 72 72"><use href="#sealArt"/></svg></span>
+                <span class="seal-shard shard-b"><svg viewBox="0 0 72 72"><use href="#sealArt"/></svg></span>
+                <span class="seal-shard shard-c"><svg viewBox="0 0 72 72"><use href="#sealArt"/></svg></span>
+                <svg class="seal-crack" viewBox="0 0 72 72" aria-hidden="true"><path d="M33.8,39.6 L37.4,30.2 L33.1,21.6 L39.6,13 L36.7,0"/><path d="M33.8,39.6 L43.2,43.2 L49,50.4 L57.6,49 L72,56.2"/><path d="M33.8,39.6 L28.8,46.1 L24.5,54 L17.3,56.2 L10.1,72"/></svg>
+                <span class="crumbs" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
               </button>
             </div>
           </div>
@@ -264,6 +269,6 @@
   <script src="vendor/gsap.min.js"></script>
   <script src="vendor/CustomEase.min.js"></script>
   <script src="vendor/SplitText.min.js"></script>
-  <script src="app.js?v=72e14f68"></script>
+  <script src="app.js?v=713f881e"></script>
 </body>
 </html>

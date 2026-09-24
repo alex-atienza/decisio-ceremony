@@ -291,14 +291,14 @@
         .add(shine(year, 1.4), 1.45)
         .from(S.coverTitle.words, { y: 26, opacity: 0, filter: 'blur(6px)', duration: 1.1, stagger: 0.07 }, 1.2)
         .from(el(s, 'lede'), { y: 16, opacity: 0, duration: 1.1 }, 1.5)
-        .from(cta, { y: 36, scale: 0.86, opacity: 0, duration: 1.4, ease: 'elastic.out(1,0.7)' }, 1.75)
+        .fromTo(cta, { y: 36, scale: 0.86, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 1.4, ease: 'elastic.out(1,0.7)' }, 1.75)
         .from(el(s, 'hint'), { opacity: 0, duration: 0.9 }, 2.1)
         .add(() => {
           keep(shineLoop(year, 4.5, 1.5));
           keep(gsap.timeline({ repeat: -1, repeatDelay: 2.6 })
             .call(() => { cta.classList.remove('shine'); void cta.offsetWidth; cta.classList.add('shine'); })
             .to(cta, { scale: 1.035, duration: 0.35, ease: 'sine.out', yoyo: true, repeat: 1 }, 0));
-        }, 2.6);
+        }, 3.2);
       return tl;
     },
 
@@ -434,7 +434,7 @@
         .to(holo, { opacity: 0, duration: 0.6 }, 2.3)
         .add(() => { fx.rain(45); }, 0.95)
         .from($$('.share', s), { y: 18, scale: 0.6, opacity: 0, duration: 0.9, stagger: 0.07, ease: 'back.out(2.2)' }, 1.35)
-        .from(cta, { y: 40, opacity: 0, duration: 1.1 }, 1.55)
+        .fromTo(cta, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 1.1 }, 1.55)
         .from(el(s, 'hint'), { opacity: 0, duration: 0.8 }, 1.85);
       counters.forEach((c, i) => tl.add(countUp(c, 1.5), 0.9 + i * 0.08));
       tl.add(shine($('.card-persona', card), 1.3), 1.4)
@@ -475,7 +475,8 @@
   /* ── Navigation ────────────────────────────────────────────── */
   const RESET = 'opacity,visibility,transform,filter,letterSpacing,color,strokeDasharray,strokeDashoffset,x,y,scale,rotate,rotation';
   let cur = -1, master = null, enterTl = null;
-  const chapterBtns = $$('#chapterList button');
+  const chapterBtns = $$('#chapterList button[data-go]');
+  const inviteBtn = $('#chapterList [data-prelude]');
 
   function go(i) {
     if (prelude.on) prelude.dismiss();
@@ -489,6 +490,7 @@
 
     const out = from >= 0 ? screens[from] : null, inn = screens[i];
     chapterBtns.forEach((b) => b.removeAttribute('aria-current'));
+    inviteBtn.removeAttribute('aria-current');
     chapterBtns[i].setAttribute('aria-current', 'step');
     history.replaceState(null, '', i ? '#' + i : location.pathname + location.search);
     progress(i);
@@ -631,12 +633,13 @@
     const E = (n) => el(root, n);
     const tiltEl = E('envTilt'), scene = E('envScene'), back = E('envBack'), front = E('envFront'), flap = E('envFlap');
     const card = E('invite'), title = E('invTitle'), seal = E('seal'), ring = E('sealRing'), pulse = E('sealPulse');
-    const [halfL, halfR] = $$('.seal-half', root);
+    const shards = $$('.seal-shard', root), crack = $('.seal-crack', root), crumbs = $$('.crumbs i', root);
     const words = [E('plEyebrow'), E('plFor'), E('plHint')];
     const chrome = [$('#progress'), $('.topbar')];
     const rx = gsap.quickTo(tiltEl, 'rotationX', { duration: 0.9, ease: 'power3' });
     const ry = gsap.quickTo(tiltEl, 'rotationY', { duration: 0.9, ease: 'power3' });
     gsap.set(tiltEl, { transformPerspective: 900 });
+    const crackPaths = $$('path', crack);
     let state = 'off', tl = null, loops = [];
 
     const stopLoops = () => { loops.forEach((a) => a.kill()); loops = []; };
@@ -653,6 +656,7 @@
       }
       cur = -1;
       chapterBtns.forEach((b) => b.removeAttribute('aria-current'));
+      inviteBtn.setAttribute('aria-current', 'step');
       history.replaceState(null, '', location.pathname + location.search);
       segs.forEach((b) => gsap.to(b, { scaleX: 0, duration: 0.35, ease: 'power2.in' }));
       gsap.to(chrome, { autoAlpha: 0, duration: replay ? 0.4 : 0 });
@@ -662,7 +666,7 @@
       gsap.to(spot, { opacity: 0.6, x: 0, y: 20, scale: 0.62, duration: 1.4, ease: 'power3.inOut' });
 
       tl && tl.kill(); stopLoops();
-      gsap.set([root, ...$$('*', root)], { clearProps: RESET + ',zIndex,rotationX,scaleX,scaleY' });
+      gsap.set([root, ...$$('*', root)], { clearProps: RESET + ',zIndex,rotationX,rotationY,scaleX,scaleY,width,height' });
       flap.classList.remove('is-open');
       seal.classList.remove('cracked');
       gsap.set(root, { autoAlpha: 1 });
@@ -708,21 +712,42 @@
       tl.to(words, { opacity: 0, y: -6, duration: 0.4, ease: 'power2.in', stagger: 0.04 }, 0)
         .to(scene, { y: 0, rotationZ: 0, duration: 0.3, ease: 'power2.out' }, 0)
         .to(pulse, { opacity: 0, duration: 0.15 }, 0)
-        // press… and crack
+        // press… a crack runs out from the pressure point… and the wax gives
         .to(seal, { scale: 0.88, duration: 0.12, ease: 'power2.out' }, 0)
-        .call(() => seal.classList.add('cracked'), null, 0.14)
-        .to(seal, { scale: 1, duration: 0.2, ease: 'power2.out' }, 0.14)
-        .add(flashAt(0.18, 0), 0.14)
-        .fromTo(ring, { scale: 0.5, opacity: 0.95 }, { scale: 4.4, opacity: 0, duration: 1.2 }, 0.14)
-        .to(scene, { keyframes: { y: [0, 6, -2, 0] }, duration: 0.36, ease: 'none' }, 0.14)
-        .to(halfL, { x: -40, rotation: -34, duration: 1.05, ease: 'power2.out' }, 0.16)
-        .to(halfL, { y: 330, duration: 1.05, ease: 'power2.in' }, 0.16)
-        .to(halfR, { x: 42, rotation: 27, duration: 1.05, ease: 'power2.out' }, 0.2)
-        .to(halfR, { y: 350, duration: 1.05, ease: 'power2.in' }, 0.2)
-        .to([halfL, halfR], { opacity: 0, duration: 0.3, ease: 'none' }, 0.9)
+        .set(crack, { opacity: 1 }, 0.08)
+        .fromTo(crackPaths, { strokeDasharray: (i, p) => p.getTotalLength(), strokeDashoffset: (i, p) => p.getTotalLength() },
+          { strokeDashoffset: 0, duration: 0.14, ease: 'power2.in' }, 0.08)
+        .call(() => seal.classList.add('cracked'), null, 0.24)
+        .set(crack, { opacity: 0 }, 0.24)
+        .to(seal, { scale: 1, duration: 0.2, ease: 'power2.out' }, 0.24)
+        .add(flashAt(0.18, 0), 0.24)
+        .fromTo(ring, { scale: 0.5, opacity: 0.95 }, { scale: 4.4, opacity: 0, duration: 1.2 }, 0.24)
+        .to(scene, { keyframes: { y: [0, 6, -2, 0] }, duration: 0.36, ease: 'none' }, 0.24);
+      // Each shard pops a little, then tumbles and drops. (x/spin ease out, fall eases in.)
+      const SHARDS = [
+        { x: -46, pop: -14, fall: 320, rotation: -48, rotationY: 65, rotationX: 10, at: 0.24 },
+        { x: 50, pop: -18, fall: 345, rotation: 38, rotationX: -55, rotationY: -20, at: 0.26 },
+        { x: 8, pop: -4, fall: 300, rotation: 16, rotationX: 70, rotationY: 10, at: 0.28 },
+      ];
+      shards.forEach((sh, i) => {
+        const d = SHARDS[i];
+        tl.to(sh, { x: d.x, rotation: d.rotation, rotationX: d.rotationX, rotationY: d.rotationY, transformPerspective: 300, duration: 1.1, ease: 'power2.out' }, d.at)
+          .to(sh, { y: d.pop, duration: 0.16, ease: 'power2.out' }, d.at)
+          .to(sh, { y: d.fall, duration: 0.95, ease: 'power2.in' }, d.at + 0.16)
+          .to(sh, { opacity: 0, duration: 0.3, ease: 'none' }, d.at + 0.85);
+      });
+      crumbs.forEach((c, i) => {
+        const a = (-150 + i * (120 / (crumbs.length - 1)) + rand(-10, 10)) * Math.PI / 180, r = rand(16, 34), size = rand(2.5, 5);
+        tl.set(c, { width: size, height: size * rand(0.6, 1) }, 0.24)
+          .to(c, { x: Math.cos(a) * r * 1.6, rotation: rand(-400, 400), duration: 0.9, ease: 'power2.out' }, 0.24)
+          .to(c, { y: Math.sin(a) * r, duration: 0.18, ease: 'power2.out' }, 0.24)
+          .to(c, { y: rand(180, 260), duration: 0.8, ease: 'power2.in' }, 0.42)
+          .to(c, { opacity: 0, duration: 0.25 }, 0.9);
+      });
+      tl
         // the flap swings open to reveal the gold liner
         .fromTo(flap, { rotationX: 0, transformPerspective: 700 }, { rotationX: 180, duration: 0.9, ease: 'power2.inOut',
-          onUpdate: () => flap.classList.toggle('is-open', gsap.getProperty(flap, 'rotationX') > 90) }, 0.34)
+          onUpdate: () => flap.classList.toggle('is-open', gsap.getProperty(flap, 'rotationX') > 90) }, 0.42)
         // the invitation slides out…
         .to(card, { y: -208, duration: 1.1, ease: 'power3.inOut' }, 1.05)
         .set(card, { zIndex: 6 }, 2.15)
