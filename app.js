@@ -478,6 +478,7 @@
   const chapterBtns = $$('#chapterList button');
 
   function go(i) {
+    if (prelude.on) prelude.dismiss();
     i = clamp(i, 0, screens.length - 1);
     if (i === cur) return;
     const from = cur;
@@ -518,6 +519,7 @@
     if (!down) return;
     const dx = e.clientX - down.x, dy = e.clientY - down.y;
     down = null;
+    if (prelude.on) return prelude.open();
     if (Math.hypot(dx, dy) > 36) {
       if (Math.abs(dx) > Math.abs(dy)) (dx < 0 ? next : prev)();
       else (dy < 0 ? next : prev)();
@@ -532,15 +534,17 @@
     const now = performance.now();
     if (now < wheelLock || Math.abs(e.deltaY) < 24) return;
     wheelLock = now + 1100;
+    if (prelude.on) { if (e.deltaY > 0) prelude.open(); return; }
     (e.deltaY > 0 ? next : prev)();
   }, { passive: true });
 
   addEventListener('keydown', (e) => {
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     const k = e.key;
+    if (prelude.on && ['ArrowRight', 'ArrowDown', 'PageDown', ' ', 'Enter'].includes(k)) { e.preventDefault(); prelude.open(); return; }
     if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(k)) { e.preventDefault(); next(); }
     else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(k)) { e.preventDefault(); prev(); }
-    else if (k === 'r' || k === 'R' || k === 'Home') go(0);
+    else if (k === 'r' || k === 'R' || k === 'Home') prelude.show();
     else if (k === 'End') go(5);
     else if (/^[1-6]$/.test(k)) go(+k - 1);
   });
@@ -595,7 +599,8 @@
     if (b.dataset.go) return go(+b.dataset.go);
     switch (b.dataset.action) {
       case 'next': next(); break;
-      case 'restart': go(0); break;
+      case 'open': prelude.open(); break;
+      case 'restart': prelude.show(); break;
       case 'share':
         pop(b);
         if (navigator.share) {
@@ -609,6 +614,163 @@
       case 'wallpaper': toast('Prototype · 9:16 wallpaper saved'); break;
     }
   });
+
+  /* ── Prelude · the invitation ──────────────────────────────── */
+  // Before the show: a sealed envelope. Breaking the seal opens the flap,
+  // lifts out the invitation, brings the house lights up and hands off to
+  // the Cover. No confetti here; this moment is light, wax and paper.
+  let beamSway = null;
+  function startSway() {
+    beamSway && beamSway.kill();
+    if (reduce) return;
+    beamSway = gsap.fromTo(beam, { rotation: -6 }, { rotation: 6, duration: 7, ease: 'sine.inOut', yoyo: true, repeat: -1 });
+  }
+
+  const prelude = (() => {
+    const root = $('#prelude');
+    const E = (n) => el(root, n);
+    const tiltEl = E('envTilt'), scene = E('envScene'), back = E('envBack'), front = E('envFront'), flap = E('envFlap');
+    const card = E('invite'), title = E('invTitle'), seal = E('seal'), ring = E('sealRing'), pulse = E('sealPulse');
+    const [halfL, halfR] = $$('.seal-half', root);
+    const words = [E('plEyebrow'), E('plFor'), E('plHint')];
+    const chrome = [$('#progress'), $('.topbar')];
+    const rx = gsap.quickTo(tiltEl, 'rotationX', { duration: 0.9, ease: 'power3' });
+    const ry = gsap.quickTo(tiltEl, 'rotationY', { duration: 0.9, ease: 'power3' });
+    gsap.set(tiltEl, { transformPerspective: 900 });
+    let state = 'off', tl = null, loops = [];
+
+    const stopLoops = () => { loops.forEach((a) => a.kill()); loops = []; };
+
+    function show() {
+      master && master.progress(1);
+      enterTl && enterTl.kill();
+      live.forEach((a) => a.kill()); live = [];
+      const replay = cur >= 0;
+      if (replay) {
+        const s = screens[cur];
+        gsap.to(s, { autoAlpha: 0, scale: 0.97, filter: 'blur(8px)', duration: 0.45, ease: 'power2.in',
+          onComplete: () => { s.classList.remove('is-active'); s.setAttribute('aria-hidden', 'true'); gsap.set(s, { clearProps: RESET }); } });
+      }
+      cur = -1;
+      chapterBtns.forEach((b) => b.removeAttribute('aria-current'));
+      history.replaceState(null, '', location.pathname + location.search);
+      segs.forEach((b) => gsap.to(b, { scaleX: 0, duration: 0.35, ease: 'power2.in' }));
+      gsap.to(chrome, { autoAlpha: 0, duration: replay ? 0.4 : 0 });
+      // House lights down: kill the beam, leave a low glow behind the envelope.
+      beamSway && beamSway.kill();
+      gsap.to(beam, { opacity: 0, duration: 1 });
+      gsap.to(spot, { opacity: 0.6, x: 0, y: 20, scale: 0.62, duration: 1.4, ease: 'power3.inOut' });
+
+      tl && tl.kill(); stopLoops();
+      gsap.set([root, ...$$('*', root)], { clearProps: RESET + ',zIndex,rotationX,scaleX,scaleY' });
+      flap.classList.remove('is-open');
+      seal.classList.remove('cracked');
+      gsap.set(root, { autoAlpha: 1 });
+      state = 'idle';
+      tl = arrive(replay ? 0.45 : 0.15);
+      if (reduce) tl.progress(1);
+    }
+
+    function arrive(delay) {
+      const t = gsap.timeline({ defaults: { ease: 'expo.out' }, delay });
+      t.from(words[0], { opacity: 0, letterSpacing: '0.9em', duration: 2 }, 0.2)
+        .from(words[1], { opacity: 0, y: 8, duration: 1.2 }, 0.6)
+        .fromTo(scene, { y: 170, rotationX: 44, rotationZ: -8, opacity: 0, transformPerspective: 900 },
+          { y: 0, rotationX: 0, rotationZ: 0, opacity: 1, duration: 1.8 }, 0.35)
+        // the seal stamps down
+        .fromTo(seal, { scale: 1.9, opacity: 0, rotation: -25 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.42, ease: 'stamp' }, 1.3)
+        .to(seal, { scaleX: 1.07, scaleY: 0.93, duration: 0.08, yoyo: true, repeat: 1, ease: 'power1.out' }, 1.72)
+        .to(scene, { y: 3, duration: 0.08, yoyo: true, repeat: 1, ease: 'power1.out' }, 1.72)
+        .fromTo(ring, { scale: 0.6, opacity: 0.7 }, { scale: 2.1, opacity: 0, duration: 0.9, immediateRender: false }, 1.72)
+        .from(words[2], { opacity: 0, y: 8, duration: 1 }, 2.1)
+        .add(() => {
+          if (reduce) return;
+          loops.push(gsap.to(scene, { y: -5, rotationZ: 0.7, duration: 2.6, ease: 'sine.inOut', yoyo: true, repeat: -1 }));
+          loops.push(gsap.fromTo(pulse, { scale: 1, opacity: 0.7 }, { scale: 1.75, opacity: 0, duration: 1.8, ease: 'power2.out', repeat: -1, repeatDelay: 0.6 }));
+          loops.push(gsap.to(words[2], { opacity: 0.55, duration: 1.4, ease: 'sine.inOut', yoyo: true, repeat: -1 }));
+        }, 2.4);
+      return t;
+    }
+
+    function open() {
+      if (state === 'opening') { tl && tl.timeScale(2.5); return; } // impatient tap: fast-forward
+      if (state !== 'idle') return;
+      state = 'opening';
+      tl && tl.progress(1).kill();
+      stopLoops();
+      rx(0); ry(0);
+      if (reduce) {
+        gsap.to(root, { autoAlpha: 0, duration: 0.4, onComplete: handoff });
+        return;
+      }
+      tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
+      tl.to(words, { opacity: 0, y: -6, duration: 0.4, ease: 'power2.in', stagger: 0.04 }, 0)
+        .to(scene, { y: 0, rotationZ: 0, duration: 0.3, ease: 'power2.out' }, 0)
+        .to(pulse, { opacity: 0, duration: 0.15 }, 0)
+        // press… and crack
+        .to(seal, { scale: 0.88, duration: 0.12, ease: 'power2.out' }, 0)
+        .call(() => seal.classList.add('cracked'), null, 0.14)
+        .to(seal, { scale: 1, duration: 0.2, ease: 'power2.out' }, 0.14)
+        .add(flashAt(0.28, 0), 0.14)
+        .fromTo(ring, { scale: 0.5, opacity: 0.95 }, { scale: 4.4, opacity: 0, duration: 1.2 }, 0.14)
+        .to(scene, { keyframes: { y: [0, 6, -2, 0] }, duration: 0.36, ease: 'none' }, 0.14)
+        .to(halfL, { x: -40, rotation: -34, duration: 1.05, ease: 'power2.out' }, 0.16)
+        .to(halfL, { y: 330, duration: 1.05, ease: 'power2.in' }, 0.16)
+        .to(halfR, { x: 42, rotation: 27, duration: 1.05, ease: 'power2.out' }, 0.2)
+        .to(halfR, { y: 350, duration: 1.05, ease: 'power2.in' }, 0.2)
+        .to([halfL, halfR], { opacity: 0, duration: 0.3, ease: 'none' }, 0.9)
+        // the flap swings open to reveal the gold liner
+        .fromTo(flap, { rotationX: 0, transformPerspective: 700 }, { rotationX: 180, duration: 0.9, ease: 'power2.inOut',
+          onUpdate: () => flap.classList.toggle('is-open', gsap.getProperty(flap, 'rotationX') > 90) }, 0.34)
+        // the invitation slides out…
+        .to(card, { y: -208, duration: 1.1, ease: 'power3.inOut' }, 1.05)
+        .set(card, { zIndex: 6 }, 2.15)
+        // …the envelope falls away and the card settles centre stage
+        .to([back, front, flap], { y: 380, opacity: 0, duration: 1.1, ease: 'power3.in' }, 1.95)
+        .to(card, { y: -4, scale: 1.18, duration: 1.25, ease: 'power3.inOut' }, 2.15)
+        .to(spot, { opacity: 0.95, y: 0, scale: 0.95, duration: 1.6, ease: 'sine.inOut' }, 2.2)
+        .add(shine(title, 1.4), 2.85)
+        // house lights up: the beam swings onto the stage
+        .to(beam, { opacity: 0.95, duration: 1.4, ease: 'power2.out' }, 3.95)
+        .fromTo(beam, { rotation: -34 }, { rotation: -6, duration: 1.9, ease: 'power3.out' }, 3.95)
+        // zoom through the invitation into the show
+        .to(card, { scale: 5.2, opacity: 0, filter: 'blur(16px)', duration: 0.95, ease: 'power3.in' }, 4.35)
+        .add(flashAt(0.9, 0.05), 4.82)
+        .add(handoff, 5.05);
+    }
+
+    function handoff() {
+      state = 'off';
+      gsap.set(root, { autoAlpha: 0 });
+      gsap.to(chrome, { autoAlpha: 1, duration: 0.9, ease: 'power2.out' });
+      startSway();
+      go(0);
+    }
+
+    // A chapter was picked while the invitation was up: skip straight there.
+    function dismiss() {
+      tl && tl.kill(); stopLoops();
+      state = 'off';
+      gsap.to(root, { autoAlpha: 0, duration: 0.3 });
+      gsap.to(chrome, { autoAlpha: 1, duration: 0.5 });
+      gsap.to(beam, { opacity: ATM[0].beam, duration: 0.8 });
+      startSway();
+    }
+
+    stage.addEventListener('pointermove', (e) => {
+      if (reduce || state !== 'idle') return;
+      const r = stage.getBoundingClientRect();
+      rx(-(((e.clientY - r.top) / r.height) * 2 - 1) * 9);
+      ry((((e.clientX - r.left) / r.width) * 2 - 1) * 11);
+    });
+    stage.addEventListener('pointerleave', () => { rx(0); ry(0); });
+
+    return {
+      show, open, dismiss,
+      get on() { return state !== 'off'; },
+      seek: (t) => { tl && tl.seek(t, false).pause(); },
+    };
+  })();
 
   /* ── Boot ──────────────────────────────────────────────────── */
   async function boot() {
@@ -627,7 +789,6 @@
     fx.seedDust();
     fx.start();
     tilt.init();
-    if (!reduce) gsap.to(beam, { rotation: 6, duration: 7, ease: 'sine.inOut', yoyo: true, repeat: -1, startAt: { rotation: -6 } });
     // Show whichever poster face points at the viewer. (backface-visibility
     // alone is unreliable in Chrome once the image gets its own layer.)
     const poster = el(screens[2], 'poster');
@@ -638,12 +799,17 @@
       back.style.visibility = showBack ? 'visible' : 'hidden';
       front.style.visibility = showBack ? 'hidden' : 'visible';
     });
+    // Deep links (#0–#5) skip the invitation and go straight to a chapter.
     const hash = parseInt(location.hash.slice(1), 10);
-    go(Number.isFinite(hash) ? clamp(hash, 0, 5) : 0);
+    if (Number.isFinite(hash)) { startSway(); go(clamp(hash, 0, 5)); }
+    else prelude.show();
   }
   // Handy for reviewing a beat frame-by-frame from the console:
-  //   ceremony.go(2); ceremony.seek(1.9)
-  window.ceremony = { go, seek: (t) => { enterTl && enterTl.seek(t, false).pause(); }, play: () => { enterTl && enterTl.play(); } };
+  //   ceremony.go(2); ceremony.seek(1.9)   ·   ceremony.prelude(); ceremony.open(); ceremony.seekPrelude(2)
+  window.ceremony = {
+    go, seek: (t) => { enterTl && enterTl.seek(t, false).pause(); }, play: () => { enterTl && enterTl.play(); },
+    prelude: () => prelude.show(), open: () => prelude.open(), seekPrelude: (t) => prelude.seek(t),
+  };
   addEventListener('resize', () => { fit(); foilMetrics(); });
   boot();
 })();

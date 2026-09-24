@@ -300,6 +300,60 @@ kbd { font: 600 10px/1 var(--f-mono); padding: 3px 6px; border-radius: 5px; bord
 .link { font: inherit; color: inherit; text-decoration: underline; text-decoration-color: #ffffff30; text-underline-offset: 3px; transition: color .2s; }
 .link:hover { color: #fff; }
 
+/* ── Prelude · the invitation ──────────────────────────────── */
+.prelude { position: absolute; inset: 0; z-index: 9; visibility: hidden;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 44px; padding-top: 36px; }
+.pl-head { text-align: center; }
+.pl-head .eyebrow { margin-bottom: 10px; }
+.pl-for { font: 400 15px/20px var(--f-body); color: var(--body); }
+.pl-hint { font: 500 13px/16px var(--f-body); color: var(--dim); }
+
+.env-tilt { width: 300px; height: 200px; }
+.env-scene { position: relative; width: 300px; height: 200px; }
+.env-back, .env-front, .env-flap { position: absolute; left: 0; top: 0; width: 100%; }
+.env-back { height: 100%; z-index: 0; border-radius: 6px;
+  background: linear-gradient(170deg, #1C1729, #110E1A);
+  box-shadow: 0 30px 70px rgba(0,0,0,.6), inset 0 0 0 1px rgba(232,178,58,.25); }
+.env-back::before { content: ""; position: absolute; inset: 0; border-radius: 6px;
+  background: repeating-linear-gradient(135deg, rgba(232,178,58,.16) 0 1.5px, transparent 1.5px 7px);
+  clip-path: polygon(0 0, 100% 0, 50% 58%); }
+.env-front { height: 100%; z-index: 3; border-radius: 6px;
+  clip-path: polygon(0 0, 50% 52%, 100% 0, 100% 100%, 0 100%);
+  background: linear-gradient(180deg, #231C35 0%, #1A1528 60%, #15111F 100%); }
+.env-flap { height: 116px; z-index: 4; border-radius: 6px 6px 0 0; transform-origin: 50% 0;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  background: linear-gradient(180deg, #2B2440 0%, #211A33 100%); }
+.env-flap.is-open { z-index: 1; background: repeating-linear-gradient(135deg, rgba(232,178,58,.24) 0 1.5px, transparent 1.5px 7px), #1B1628; }
+.env-front svg, .env-flap svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+.invite { position: absolute; left: 14px; top: 12px; width: 272px; height: 176px; z-index: 2; border-radius: 4px;
+  padding: 16px 18px; display: flex; flex-direction: column; align-items: center; text-align: center;
+  background: linear-gradient(in oklab 170deg, #241C38 0%, #15111F 72%);
+  box-shadow: 0 0 0 1px rgba(232,178,58,.55), 0 20px 50px rgba(0,0,0,.55); }
+.invite::before { content: ""; position: absolute; inset: 6px; border: 1px solid rgba(232,178,58,.28); border-radius: 2px; pointer-events: none; }
+.inv-top { display: flex; align-items: center; gap: 6px; font: 600 9px/12px var(--f-mono); letter-spacing: .24em; color: var(--gold); margin-top: 2px; }
+.inv-title { font: 900 31px/1 var(--f-display); letter-spacing: -.03em; margin-top: 14px; padding: 0 .04em .06em; }
+.inv-sub { font: 800 14px/18px var(--f-display); letter-spacing: -.01em; margin-top: 3px; }
+.inv-div { display: flex; align-items: center; gap: 8px; margin-top: 13px; }
+.inv-div i { width: 36px; height: 1px; background: rgba(232,178,58,.45); }
+.inv-div b { width: 5px; height: 5px; background: var(--gold); transform: rotate(45deg); }
+.inv-admit { font: 600 8.5px/12px var(--f-mono); letter-spacing: .22em; color: var(--gold); margin-top: 11px; }
+
+/* The seal sits on the flap tip. The right half overlays an intact left
+   copy, so the crack only shows once .cracked clips the left half too. */
+.seal, .seal-ring, .seal-pulse { position: absolute; left: 114px; top: 80px; width: 72px; height: 72px; border-radius: 50%; }
+.seal { z-index: 5; padding: 0; filter: drop-shadow(0 5px 7px rgba(0,0,0,.55)); }
+.seal.cracked { filter: none; }
+.seal:focus-visible { outline-offset: 4px; border-radius: 50%; }
+.seal-half { position: absolute; inset: 0; }
+.seal.cracked .seal-half { filter: drop-shadow(0 5px 7px rgba(0,0,0,.55)); }
+.seal-half svg { width: 100%; height: 100%; display: block; }
+.seal-r svg { clip-path: polygon(53% 0, 100% 0, 100% 100%, 48% 100%, 54% 76%, 45% 57%, 56% 38%, 47% 20%); }
+.seal.cracked .seal-l svg { clip-path: polygon(0 0, 53% 0, 47% 20%, 56% 38%, 45% 57%, 54% 76%, 48% 100%, 0 100%); }
+.seal-ring, .seal-pulse { z-index: 5; pointer-events: none; opacity: 0; }
+.seal-ring { border: 1.5px solid rgba(247,216,138,.9); box-shadow: 0 0 18px rgba(232,178,58,.5); }
+.seal-pulse { border: 1px solid rgba(232,178,58,.7); }
+
 /* Toast */
 .toast { position: absolute; left: 50%; bottom: 128px; z-index: 30; transform: translate(-50%, 20px); opacity: 0; pointer-events: none;
   padding: 10px 16px; border-radius: 99px; background: rgba(26,23,38,.92); border: 1px solid #E8B23A55;
