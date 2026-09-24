@@ -318,7 +318,7 @@ kbd { font: 600 10px/1 var(--f-mono); padding: 3px 6px; border-radius: 5px; bord
   background: repeating-linear-gradient(135deg, rgba(232,178,58,.16) 0 1.5px, transparent 1.5px 7px);
   clip-path: polygon(0 0, 100% 0, 50% 58%); }
 .env-front { height: 100%; z-index: 3; border-radius: 6px;
-  clip-path: polygon(0 0, 50% 52%, 100% 0, 100% 100%, 0 100%);
+  clip-path: polygon(0 0, 50% 20%, 100% 0, 100% 100%, 0 100%);
   background: linear-gradient(180deg, #231C35 0%, #1A1528 60%, #15111F 100%); }
 .env-flap { height: 116px; z-index: 4; border-radius: 6px 6px 0 0; transform-origin: 50% 0;
   clip-path: polygon(0 0, 100% 0, 50% 100%);

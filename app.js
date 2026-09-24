@@ -678,7 +678,8 @@
         .fromTo(scene, { y: 170, rotationX: 44, rotationZ: -8, opacity: 0, transformPerspective: 900 },
           { y: 0, rotationX: 0, rotationZ: 0, opacity: 1, duration: 1.8 }, 0.35)
         // the seal stamps down
-        .fromTo(seal, { scale: 1.9, opacity: 0, rotation: -25 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.42, ease: 'stamp' }, 1.3)
+        .fromTo(seal, { scale: 1.6, rotation: -25 }, { scale: 1, rotation: 0, duration: 0.36, ease: 'stamp' }, 1.3)
+        .fromTo(seal, { opacity: 0 }, { opacity: 1, duration: 0.1, ease: 'none' }, 1.3)
         .to(seal, { scaleX: 1.07, scaleY: 0.93, duration: 0.08, yoyo: true, repeat: 1, ease: 'power1.out' }, 1.72)
         .to(scene, { y: 3, duration: 0.08, yoyo: true, repeat: 1, ease: 'power1.out' }, 1.72)
         .fromTo(ring, { scale: 0.6, opacity: 0.7 }, { scale: 2.1, opacity: 0, duration: 0.9, immediateRender: false }, 1.72)
@@ -711,7 +712,7 @@
         .to(seal, { scale: 0.88, duration: 0.12, ease: 'power2.out' }, 0)
         .call(() => seal.classList.add('cracked'), null, 0.14)
         .to(seal, { scale: 1, duration: 0.2, ease: 'power2.out' }, 0.14)
-        .add(flashAt(0.28, 0), 0.14)
+        .add(flashAt(0.18, 0), 0.14)
         .fromTo(ring, { scale: 0.5, opacity: 0.95 }, { scale: 4.4, opacity: 0, duration: 1.2 }, 0.14)
         .to(scene, { keyframes: { y: [0, 6, -2, 0] }, duration: 0.36, ease: 'none' }, 0.14)
         .to(halfL, { x: -40, rotation: -34, duration: 1.05, ease: 'power2.out' }, 0.16)
@@ -731,12 +732,12 @@
         .to(spot, { opacity: 0.95, y: 0, scale: 0.95, duration: 1.6, ease: 'sine.inOut' }, 2.2)
         .add(shine(title, 1.4), 2.85)
         // house lights up: the beam swings onto the stage
-        .to(beam, { opacity: 0.95, duration: 1.4, ease: 'power2.out' }, 3.95)
-        .fromTo(beam, { rotation: -34 }, { rotation: -6, duration: 1.9, ease: 'power3.out' }, 3.95)
+        .to(beam, { opacity: 0.95, duration: 1.4, ease: 'power2.out' }, 3.2)
+        .fromTo(beam, { rotation: -34 }, { rotation: -6, duration: 1.9, ease: 'power3.out' }, 3.2)
         // zoom through the invitation into the show
-        .to(card, { scale: 5.2, opacity: 0, filter: 'blur(16px)', duration: 0.95, ease: 'power3.in' }, 4.35)
-        .add(flashAt(0.9, 0.05), 4.82)
-        .add(handoff, 5.05);
+        .to(card, { scale: 4.2, opacity: 0, filter: 'blur(12px)', duration: 0.8, ease: 'power3.in' }, 3.6)
+        .add(flashAt(0.4, 0), 4.05)
+        .add(handoff, 4.2);
     }
 
     function handoff() {
