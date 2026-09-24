@@ -670,6 +670,7 @@
       flap.classList.remove('is-open');
       seal.classList.remove('cracked');
       gsap.set(root, { autoAlpha: 1 });
+      root.classList.add('is-on');
       state = 'idle';
       tl = arrive(replay ? 0.45 : 0.15);
       if (reduce) tl.progress(1);
@@ -768,6 +769,7 @@
     function handoff() {
       state = 'off';
       gsap.set(root, { autoAlpha: 0 });
+      root.classList.remove('is-on');
       gsap.to(chrome, { autoAlpha: 1, duration: 0.9, ease: 'power2.out' });
       startSway();
       go(0);
@@ -777,7 +779,7 @@
     function dismiss() {
       tl && tl.kill(); stopLoops();
       state = 'off';
-      gsap.to(root, { autoAlpha: 0, duration: 0.3 });
+      gsap.to(root, { autoAlpha: 0, duration: 0.3, onComplete: () => { if (state === 'off') root.classList.remove('is-on'); } });
       gsap.to(chrome, { autoAlpha: 1, duration: 0.5 });
       gsap.to(beam, { opacity: ATM[0].beam, duration: 0.8 });
       startSway();

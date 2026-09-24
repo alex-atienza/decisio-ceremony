@@ -304,6 +304,9 @@ kbd { font: 600 10px/1 var(--f-mono); padding: 3px 6px; border-radius: 5px; bord
 /* ── Prelude · the invitation ──────────────────────────────── */
 .prelude { position: absolute; inset: 0; z-index: 9; visibility: hidden;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 44px; padding-top: 36px; }
+/* Off means off: shards and crumbs set visibility:visible on themselves,
+   which would otherwise survive a hidden parent and swallow clicks. */
+.prelude:not(.is-on), .prelude:not(.is-on) * { visibility: hidden !important; pointer-events: none !important; }
 .pl-head { text-align: center; }
 .pl-head .eyebrow { margin-bottom: 10px; }
 .pl-for { font: 400 15px/20px var(--f-body); color: var(--body); }
